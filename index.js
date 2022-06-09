@@ -1,6 +1,8 @@
 const express = require('express');
 require('express-async-errors');
 
+const cors = require('cors');
+
 const books = require('./routes/books');
 const user = require('./routes/user');
 
@@ -11,6 +13,7 @@ const auth = require('./middleware/authentication');
 require('dotenv').config();
 
 const app = express();
+app.use(cors());
 
 // Middleware
 app.use(express.json());
