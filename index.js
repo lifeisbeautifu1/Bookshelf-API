@@ -1,9 +1,13 @@
 const express = require('express');
 require('express-async-errors');
-const booksRouter = require('./routes/books');
+
+const books = require('./routes/books');
+const user = require('./routes/user');
+
 const connectDB = require('./db/connectDB');
 const notFound = require('./middleware/notFound');
 const errorHandler = require('./middleware/errorHandler');
+const auth = require('./middleware/authentication');
 require('dotenv').config();
 
 const app = express();
@@ -15,7 +19,8 @@ app.get('/', (req, res) => {
   res.status(200).json({ msg: 'welcome to home page!' });
 });
 
-app.use('/api/v1/books', booksRouter);
+app.use('/api/v1/books', auth, books);
+app.use('/auth', user);
 
 app.use(notFound);
 app.use(errorHandler);

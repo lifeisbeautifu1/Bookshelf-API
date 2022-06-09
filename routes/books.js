@@ -1,5 +1,5 @@
 const express = require('express');
-const booksRouter = express.Router();
+const router = express.Router();
 
 const {
   getAllBooks,
@@ -9,14 +9,14 @@ const {
   updateBook,
 } = require('../controllers/books');
 
-booksRouter.post('/', createBook);
+router.post('/', createBook);
 
-booksRouter.get('/', getAllBooks);
+router.get('/', getAllBooks);
 
-booksRouter.get('/:id', getBook);
+router.get('/:id', getBook);
 
-booksRouter.patch('/:id', updateBook);
+router.patch('/:id', updateBook);
 
-booksRouter.delete('/:id', deleteBook);
+router.delete('/:id', deleteBook);
 
-module.exports = booksRouter;
+module.exports = router;

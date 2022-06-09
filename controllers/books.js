@@ -3,10 +3,9 @@ const {StatusCodes} = require('http-status-codes');
 const Book = require('../models/Book');
 
 const getAllBooks = async (req, res) => {
-
   const queryObject = {};
 
-  const {title, author, sort, genre, fields, numericFilters} = req.query;
+  const { title, author, sort, genre, fields, numericFilters } = req.query;
 
   if (title) {
     queryObject.title = title;
@@ -25,28 +24,25 @@ const getAllBooks = async (req, res) => {
     '>=': '$gte',
     '=': '$eq',
     '<': '$lt',
-    "<=": '$lte',
+    '<=': '$lte',
   };
-
 
   const validFields = ['price'];
   const regEx = /\b(<|>|=|<=|>=)\b/g;
 
   if (numericFilters) {
     let filters = numericFilters.replace(regEx, (math) => {
-      return `-${operationMap[math]}-`
+      return `-${operationMap[math]}-`;
     });
     filters.split(',').forEach((item) => {
       const [field, operator, value] = item.split('-');
       if (validFields.includes(field)) {
-        queryObject[field] = { [operator]: Number(value)};
+        queryObject[field] = { [operator]: Number(value) };
       }
     });
   }
 
-
   let result = Book.find(queryObject);
-
 
   if (sort) {
     const sortList = sort.split(',').join(' ');
@@ -58,18 +54,18 @@ const getAllBooks = async (req, res) => {
   if (fields) {
     const fieldsList = fields.split(',').join(' ');
     result.select(fieldsList); // 'author title ' => {author, title}
-                              // result.map((item) => {item.author, item.title})
+    // result.map((item) => {item.author, item.title})
   }
 
   const limit = req.query.limit || 20;
   const page = req.query.page || 1;
-  const skip = (page - 1 ) * limit;
+  const skip = (page - 1) * limit;
 
   result = result.skip(skip).limit(limit);
 
   const books = await result;
 
-  res.status(StatusCodes.OK).json( {count: books?.length, books});
+  res.status(StatusCodes.OK).json({ count: books?.length, books });
 };
 
 const getBook = async (req, res) => {
